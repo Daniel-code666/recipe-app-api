@@ -21,13 +21,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-bjlreuh-%so#f45v4)*h=20j38nh!ss((bbm5n^43lv9f_*wkt'
+# SECRET_KEY = 'django-insecure-bjlreuh-%so#f45v4)*h=20j38nh!ss((bbm5n^43lv9f_*wkt'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '1234')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = bool(int(os.environ.get('DEBUG', 0)))
 
 ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS.extend(
+    filter(
+        None,
+        os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(','),
+    )
+)
 
 # Application definition
 
@@ -80,13 +87,24 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': os.getenv('DATABASE_NAME', 'devdb'),  # nombre de la base de datos en PostgreSQL
+#         'USER': os.getenv('DATABASE_USER', 'postgres'),       # usuario de la base de datos
+#         'PASSWORD': os.getenv('DATABASE_PASSWORD', '1234'),  # contraseña del usuario
+#         'HOST': os.getenv('DATABASE_HOST', 'postgres_db'),      # nombre del servicio o contenedor PostgreSQL
+#         'PORT': os.getenv('DATABASE_PORT', '5432'),             # puerto predeterminado de PostgreSQL
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DATABASE_NAME', 'devdb'),  # nombre de la base de datos en PostgreSQL
         'USER': os.getenv('DATABASE_USER', 'postgres'),       # usuario de la base de datos
         'PASSWORD': os.getenv('DATABASE_PASSWORD', '1234'),  # contraseña del usuario
-        'HOST': os.getenv('DATABASE_HOST', 'postgres_db'),      # nombre del servicio o contenedor PostgreSQL
+        'HOST': os.getenv('DATABASE_HOST', 'localhost'),      # nombre del servicio o contenedor PostgreSQL
         'PORT': os.getenv('DATABASE_PORT', '5432'),             # puerto predeterminado de PostgreSQL
     }
 }
