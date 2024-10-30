@@ -10,6 +10,7 @@ services:
       - "8000:8000"
     volumes:
       - ./app:/app
+      - dev-static-data:/vol/web
     environment:
       - DATABASE_HOST=postgres_db
       - DATABASE_PORT=5432
@@ -22,6 +23,9 @@ services:
              python manage.py runserver 0.0.0.0:8000"
     networks:
       - postgresqlnetwork
+
+volumes:
+  dev-static-data:
 
 networks:
   postgresqlnetwork:
